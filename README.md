@@ -1,6 +1,6 @@
 # PersistenceCacheStack
 PersistenceCacheStack is a C# library that implements a two levels cache allowing at the same time high performance and persistence.
-PersistenceCacheStack uses the MemoryCache as the first layer and Redis as a second layer.
+PersistenceCacheStack uses the **MemoryCache** as the first layer and **Redis** as the second layer.
 
 ### What can it be used for?
 PersistenceCacheStack can be used in all contexts that require fast access to the cache without sacrificing persistence.
@@ -15,9 +15,13 @@ In fact, a cached data may not be updated to the version of the other nodes but 
 ### Architecture
 ![Alt text](/wiki/img/Architecture.png?raw=true)
 
+### Redis
+PersistenceCacheStack uses the **StackExchange.Redis** and **StackExchange.Redis.Extensions** to wrap the CRUD operations towars Redis.
+You can find all the references to the projects in this file.
+
 ### Installation
 
-To install the **PersistenceCacheStack** library just add the dll reference into your project.
+To install the **PersistenceCacheStack** library just add the dll reference and its dependencies into your project.
 
 ### How to configure it
 
@@ -49,11 +53,12 @@ Here the example of an App.config file
 ```
 
 ### Serialization
-In order to store a class into Redis, that class must be serializable.
+In order to store a class into Redis, that class must be serializable. 
+PersistenceCacheStack uses the **PersistenceCacheStackEntity** object to incapsulate the <key, value> couple and checks if the object is actually serializable into the constructor.
 
 ### Usage
 
-To use the PersistenceCacheStack library, it is sufficient to instantiate a **PersistenceCacheStackClient** object specifying the type of object it will work on.
+To use the PersistenceCacheStack library, just instantiate a **PersistenceCacheStackClient** object specifying the type of object it will work on.
 
 ```csharp
 var persistenceCacheStack = new PersistenceCacheStackClient<T>();
