@@ -8,7 +8,7 @@ For example, a service that should not lose the cached data after a reboot or an
 
 ### How it works
 PersistenceCacheStack uses two different cache layers, a first layer in-memory using MemoryCache and a second layer on Redis for persistence.
-All operations performed in cache will take place on the first in-memory cache layer and will be synchronized with the fire-and-forget pattern, with Redis. 
+All operations performed in cache will take place on the first in-memory cache layer and will be synchronized with the *fire-and-forget* pattern, with Redis. 
 This logic allows the data to be obtained immediately without waiting for any network latency. On the other hand, the system changes from a strong consistency to eventually consistency in a multi-node context.
 In fact, a cached data may not be updated to the version of the other nodes but eventually it will be aligned.
 
