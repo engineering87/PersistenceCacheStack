@@ -36,14 +36,14 @@
     <Reference Include="StackExchange.Redis, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.1.2.6\lib\net46\StackExchange.Redis.dll</HintPath>
     </Reference>
-    <Reference Include="StackExchange.Redis.Extensions.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=d7d863643bcd13ef, processorArchitecture=MSIL">
-      <HintPath>..\packages\StackExchange.Redis.Extensions.Core.3.3.0\lib\net46\StackExchange.Redis.Extensions.Core.dll</HintPath>
+    <Reference Include="StackExchange.Redis.Extensions.Core, Version=3.4.0.0, Culture=neutral, PublicKeyToken=d7d863643bcd13ef, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.Extensions.Core.3.4.0\lib\net46\StackExchange.Redis.Extensions.Core.dll</HintPath>
     </Reference>
     <Reference Include="StackExchange.Redis.Extensions.LegacyConfiguration, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StackExchange.Redis.Extensions.LegacyConfiguration.1.3.0\lib\net45\StackExchange.Redis.Extensions.LegacyConfiguration.dll</HintPath>
+      <HintPath>..\packages\StackExchange.Redis.Extensions.LegacyConfiguration.1.4.0\lib\net45\StackExchange.Redis.Extensions.LegacyConfiguration.dll</HintPath>
     </Reference>
-    <Reference Include="StackExchange.Redis.Extensions.Newtonsoft, Version=3.3.0.0, Culture=neutral, PublicKeyToken=d7d863643bcd13ef, processorArchitecture=MSIL">
-      <HintPath>..\packages\StackExchange.Redis.Extensions.Newtonsoft.3.3.0\lib\net46\StackExchange.Redis.Extensions.Newtonsoft.dll</HintPath>
+    <Reference Include="StackExchange.Redis.Extensions.Newtonsoft, Version=3.4.0.0, Culture=neutral, PublicKeyToken=d7d863643bcd13ef, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.Extensions.Newtonsoft.3.4.0\lib\net46\StackExchange.Redis.Extensions.Newtonsoft.dll</HintPath>
     </Reference>
     <Reference Include="StackExchange.Redis.StrongName, Version=1.2.6.0, Culture=neutral, PublicKeyToken=c219ff1ca8c2ce46, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.StrongName.1.2.6\lib\net46\StackExchange.Redis.StrongName.dll</HintPath>
