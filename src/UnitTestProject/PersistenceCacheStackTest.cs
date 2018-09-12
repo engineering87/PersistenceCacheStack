@@ -18,7 +18,7 @@ namespace UnitTestProject
                 TestId = 1
             };
 
-            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>();
+            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>(true);
 
             var addResult = persistenceCacheStack.AddItem("TestAddItem", testClass, null);
             Assert.IsTrue(addResult);
@@ -33,7 +33,7 @@ namespace UnitTestProject
                 TestId = 2
             };
 
-            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>();
+            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>(true);
 
             var addResult = persistenceCacheStack.AddItem("TestAddItem", testClass, null);
             Assert.IsTrue(addResult);
@@ -52,7 +52,7 @@ namespace UnitTestProject
                 TestId = 3
             };
 
-            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>();
+            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>(true);
 
             var addResult = persistenceCacheStack.AddItem("TestRemoveItem", testClass, null);
             Assert.IsTrue(addResult);
@@ -88,7 +88,7 @@ namespace UnitTestProject
             Assert.IsNotNull(objectCached);
 
             // synch from Redis
-            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>();
+            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>(true);
 
             var obj = persistenceCacheStack.GetItem("TestSynchFromRedis");
             Assert.IsNotNull(obj);

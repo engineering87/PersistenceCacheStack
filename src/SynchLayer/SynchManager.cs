@@ -7,13 +7,13 @@ namespace PersistenceCacheStack
 {
     public class SynchManager
     {
-        private TaskFactory taskFactory;
+        private readonly TaskFactory taskFactory;
         private RedisWrapper redisWrapper;
 
         public SynchManager()
         {
-            taskFactory = new TaskFactory(TaskCreationOptions.PreferFairness, TaskContinuationOptions.PreferFairness);
-            redisWrapper = new RedisWrapper();
+            this.taskFactory = new TaskFactory(TaskCreationOptions.PreferFairness, TaskContinuationOptions.PreferFairness);
+            this.redisWrapper = new RedisWrapper();
         }
 
         /// <summary>
@@ -21,8 +21,8 @@ namespace PersistenceCacheStack
         /// </summary>
         public void SynchFromRedis()
         {
-            var objRedis = redisWrapper.GetAll();
-            taskFactory.StartNew(() => GlobalCachingProvider.Instance.AddItems(objRedis));
+            var objRedis = this.redisWrapper.GetAll();
+            this.taskFactory.StartNew(() => GlobalCachingProvider.Instance.AddItems(objRedis));
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace PersistenceCacheStack
         {
             var objCached = GlobalCachingProvider.Instance.GetItem(key, false);
             // fire and forget, check the status of the current key-object on Redis for any changes from other nodes
-            taskFactory.StartNew(() => this.CheckExternalsUpdates(key, objCached));
+            this.taskFactory.StartNew(() => this.CheckExternalsUpdates(key, objCached));
             return objCached;
         }
 
@@ -48,7 +48,7 @@ namespace PersistenceCacheStack
             bool resultInMemory = GlobalCachingProvider.Instance.AddItem(PersistenceCacheStackEntity);
             if(true == resultInMemory)
             {
-                taskFactory.StartNew(() => redisWrapper.Push(PersistenceCacheStackEntity));
+                this.taskFactory.StartNew(() => this.redisWrapper.Push(PersistenceCacheStackEntity));
                 return resultInMemory;
             }
             return false;
@@ -64,7 +64,7 @@ namespace PersistenceCacheStack
             bool resultInMemory = GlobalCachingProvider.Instance.RemoveItem(key);
             if (true == resultInMemory)
             {
-                taskFactory.StartNew(() => redisWrapper.Remove(key));
+                this.taskFactory.StartNew(() => this.redisWrapper.Remove(key));
                 return resultInMemory;
             }
             return false;
@@ -83,7 +83,7 @@ namespace PersistenceCacheStack
                 var resultInMemory = GlobalCachingProvider.Instance.AddItem(PersistenceCacheStackEntity);
                 if (true == resultInMemory)
                 {
-                    taskFactory.StartNew(() => redisWrapper.Update(PersistenceCacheStackEntity));
+                    this.taskFactory.StartNew(() => this.redisWrapper.Update(PersistenceCacheStackEntity));
                 }
                 return resultInMemory;
             }
@@ -98,7 +98,7 @@ namespace PersistenceCacheStack
             var clearResult = GlobalCachingProvider.Instance.ClearCache();
             if(true == clearResult)
             {
-                taskFactory.StartNew(() => redisWrapper.Clear());
+                this.taskFactory.StartNew(() => this.redisWrapper.Clear());
             }
         }
 

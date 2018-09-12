@@ -6,9 +6,9 @@ namespace RedisLayer
 {
     public class RedisAccess
     {
-        private static object _synclock = new object();
+        private static readonly object _synclock = new object();
         private static RedisAccess _instance;
-        private NewtonsoftSerializer _serializer;
+        private readonly NewtonsoftSerializer _serializer;
         public StackExchangeRedisCacheClient RedisCacheClient { get; private set; }
 
         private RedisAccess()

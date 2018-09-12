@@ -5,12 +5,20 @@ namespace PersistenceCacheStack
 {
     public class PersistenceCacheStackClient<T>
     {
-        private SynchManager SynchManager;
+        private readonly SynchManager SynchManager;
 
-        public PersistenceCacheStackClient()
+        /// <summary>
+        /// PersistenceCacheStack constructor. 
+        /// Take the SynchFromRedis flag for init synch from Redis.
+        /// </summary>
+        /// <param name="SynchFromRedis"></param>
+        public PersistenceCacheStackClient(bool SynchFromRedis)
         {
             this.SynchManager = new SynchManager();
-            this.SynchManager.SynchFromRedis();
+            if (SynchFromRedis)
+            {
+                this.SynchManager.SynchFromRedis();
+            }
         }
 
         /// <summary>

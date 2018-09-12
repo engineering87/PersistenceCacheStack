@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MemoryCacheLayer
 {
-    public abstract class CachingProviderBase
+    public abstract class CachingProviderBase : IDisposable
     {
         protected MemoryCache cache = new MemoryCache("CachingProvider");
 
@@ -214,6 +214,27 @@ namespace MemoryCacheLayer
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (cache != null)
+                {
+                    lock (padlock)
+                    {
+                        cache.Dispose();
+                        cache = null;
+                    }
+                }
             }
         }
     }

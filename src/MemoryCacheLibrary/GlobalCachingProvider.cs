@@ -1,12 +1,11 @@
 ﻿using CacheStackEntity;
-using System;
 using System.Collections.Generic;
 
 namespace MemoryCacheLayer
 {
     public class GlobalCachingProvider : CachingProviderBase, IGlobalCachingProvider
     {
-        private static object _synclock = new object();
+        private static readonly object _synclock = new object();
         private static GlobalCachingProvider _instance;
         private GlobalCachingProvider() { }
 
