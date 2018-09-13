@@ -63,7 +63,9 @@ namespace RedisLayer
                     {
                         var obj = RedisAccess.Instance.RedisCacheClient.Get<PersistenceCacheStackEntity>(key);
                         if (obj != null)
+                        {
                             objList.Add(obj);
+                        }
                     });
                 }
                 return objList;
@@ -79,20 +81,13 @@ namespace RedisLayer
         /// </summary>
         /// <param name="PersistenceCacheStackEntity"></param>
         /// <returns></returns>
-        public bool Push(PersistenceCacheStackEntity PersistenceCacheStackEntity)
+        public bool Push(PersistenceCacheStackEntity pCacheStackEntity)
         {
-            try
+            if (pCacheStackEntity.Expiration.HasValue)
             {
-                if (PersistenceCacheStackEntity.Expiration.HasValue)
-                {
-                    return RedisAccess.Instance.RedisCacheClient.Add(PersistenceCacheStackEntity.Key, PersistenceCacheStackEntity, PersistenceCacheStackEntity.Expiration.Value);
-                }
-                return RedisAccess.Instance.RedisCacheClient.Add(PersistenceCacheStackEntity.Key, PersistenceCacheStackEntity);
+                return RedisAccess.Instance.RedisCacheClient.Add(pCacheStackEntity.Key, pCacheStackEntity, pCacheStackEntity.Expiration.Value);
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            return RedisAccess.Instance.RedisCacheClient.Add(pCacheStackEntity.Key, pCacheStackEntity);
         }
 
         /// <summary>
@@ -102,20 +97,13 @@ namespace RedisLayer
         /// <param name="expiresAt"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool Update(PersistenceCacheStackEntity PersistenceCacheStackEntity)
+        public bool Update(PersistenceCacheStackEntity pCacheStackEntity)
         {
-            try
+            if (pCacheStackEntity.Expiration.HasValue)
             {
-                if (PersistenceCacheStackEntity.Expiration.HasValue)
-                {
-                    return RedisAccess.Instance.RedisCacheClient.Replace(PersistenceCacheStackEntity.Key, PersistenceCacheStackEntity, PersistenceCacheStackEntity.Expiration.Value);
-                }
-                return RedisAccess.Instance.RedisCacheClient.Replace(PersistenceCacheStackEntity.Key, PersistenceCacheStackEntity);
+                return RedisAccess.Instance.RedisCacheClient.Replace(pCacheStackEntity.Key, pCacheStackEntity, pCacheStackEntity.Expiration.Value);
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            return RedisAccess.Instance.RedisCacheClient.Replace(pCacheStackEntity.Key, pCacheStackEntity);
         }
 
         /// <summary>
@@ -125,14 +113,7 @@ namespace RedisLayer
         /// <returns></returns>
         public bool Remove(string key)
         {
-            try
-            {
-                return RedisAccess.Instance.RedisCacheClient.Remove(key);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            return RedisAccess.Instance.RedisCacheClient.Remove(key);
         }
 
         /// <summary>
@@ -142,14 +123,7 @@ namespace RedisLayer
         /// <returns></returns>
         public bool Remove(List<string> keyList)
         {
-            try
-            {
-                RedisAccess.Instance.RedisCacheClient.RemoveAll(keyList.AsEnumerable());
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            RedisAccess.Instance.RedisCacheClient.RemoveAll(keyList.AsEnumerable());
             return true;
         }
 
@@ -159,19 +133,12 @@ namespace RedisLayer
         /// <returns></returns>
         public bool Clear()
         {
-            try
+            IEnumerable<string> keys = RedisAccess.Instance.RedisCacheClient.SearchKeys("*");
+            if (keys != null)
             {
-                IEnumerable<string> keys = RedisAccess.Instance.RedisCacheClient.SearchKeys("*");
-                if (keys != null)
-                {
-                    return this.Remove(keys.ToList());
-                }
+                return this.Remove(keys.ToList());
             }
-            catch (Exception)
-            {
-                return false;
-            }
-            return true;
+            return false;
         }
     }
 }

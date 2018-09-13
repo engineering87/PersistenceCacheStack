@@ -75,7 +75,7 @@
       <Project>{61fdfd16-5222-480f-800e-488dec95cae0}</Project>
       <Name>RedisLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SynchLayer\PersistenceCacheStack.csproj">
+    <ProjectReference Include="..\PersistenceCacheStack\PersistenceCacheStack.csproj">
       <Project>{ef41866f-dfab-42f1-8520-b22bc6931d40}</Project>
       <Name>PersistenceCacheStack</Name>
     </ProjectReference>
