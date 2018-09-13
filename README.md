@@ -21,7 +21,8 @@ You can find all the references to the projects in this file.
 
 ### Installation
 
-To install the **PersistenceCacheStack** library just add the dll reference and its dependencies into your project.
+To install the **PersistenceCacheStack** library just add the dll reference and its dependencies.
+All dependencies are embedded with Costura.Fody.
 
 ### How to configure it
 
@@ -59,19 +60,20 @@ PersistenceCacheStack uses the **PersistenceCacheStackEntity** object to incapsu
 ### Usage
 
 To use the PersistenceCacheStack library, just instantiate a **PersistenceCacheStackClient** object specifying the type of object it will work on.
+The instance constructor receives a flag to request auto synchronization from Redis.
 
 ```csharp
-var persistenceCacheStack = new PersistenceCacheStackClient<T>();
+var persistenceCacheStack = new PersistenceCacheStackClient<T>(true);
 ```
 at this point the CRUD operations can be performed.
 For example, below how to add an object of type string inside the cache with no expiration:
 
 ```csharp
-var persistenceCacheStack = new PersistenceCacheStackClient<string>();
+var persistenceCacheStack = new PersistenceCacheStackClient<string>(true);
 var addResult = persistenceCacheStack.AddItem("Key", "AddItemString", null);
 ```
 
-To synchronize the in-memory cache with Redis use the following instruction:
+To explicit synchronize the in-memory cache with Redis use the following instruction:
 
 ```csharp
 persistenceCacheStack.SynchFromRedis();
@@ -86,7 +88,8 @@ https://github.com/StackExchange/StackExchange.Redis
 https://github.com/imperugo/StackExchange.Redis.Extensions
 
 ### Contributing
-Contributions welcome! Please contact me to join the project.
+Thank you for considering to help out with the source code! We welcome contributions from anyone on the internet, and are grateful for even the smallest of fixes!
+If you'd like to contribute to go-ethereum, please fork, fix, commit and send a pull request for the maintainers to review and merge into the main code base.
 
 **Getting started with Git and GitHub**
 
@@ -97,6 +100,7 @@ Contributions welcome! Please contact me to join the project.
 
 ### Licensee
 PersistenceCacheStack source code is available under GNU General Public License v3.0, see license in the source.
+https://www.gnu.org/licenses/gpl-3.0.en.html
 
 ### Contact
 Please contact at francesco.delre.87[at]gmail.com for any details.
