@@ -8,14 +8,23 @@ namespace PersistenceCacheStack
         private readonly SynchManager SynchManager;
 
         /// <summary>
-        /// PersistenceCacheStack constructor. 
-        /// Take the SynchFromRedis flag for init synch from Redis.
+        /// PersistenceCacheStack constructor
         /// </summary>
-        /// <param name="SynchFromRedis"></param>
-        public PersistenceCacheStackClient(bool SynchFromRedis)
+        public PersistenceCacheStackClient()
         {
             this.SynchManager = new SynchManager();
-            if (SynchFromRedis)
+            this.SynchManager.SynchFromRedis();
+        }
+
+        /// <summary>
+        /// PersistenceCacheStack constructor
+        /// Take the SynchFromRedis flag for init synch from Redis
+        /// </summary>
+        /// <param name="SynchFromRedis"></param>
+        public PersistenceCacheStackClient(bool synchFromRedis)
+        {
+            this.SynchManager = new SynchManager();
+            if (true == synchFromRedis)
             {
                 this.SynchManager.SynchFromRedis();
             }
@@ -43,9 +52,9 @@ namespace PersistenceCacheStack
         /// <param name="obj"></param>
         /// <param name="Expiration"></param>
         /// <returns></returns>
-        public bool AddItem(string key, T obj, DateTimeOffset? Expiration)
+        public bool AddItem(string key, T obj, DateTimeOffset? expiration)
         {
-            var pCacheStackEntity = new PersistenceCacheStackEntity(key, obj, Expiration);
+            var pCacheStackEntity = new PersistenceCacheStackEntity(key, obj, expiration);
             if (pCacheStackEntity != null)
             {
                 return this.SynchManager.AddItem(pCacheStackEntity);
@@ -70,9 +79,9 @@ namespace PersistenceCacheStack
         /// <param name="obj"></param>
         /// <param name="Expiration"></param>
         /// <returns></returns>
-        public bool UpdateItem(string key, T obj, DateTimeOffset? Expiration)
+        public bool UpdateItem(string key, T obj, DateTimeOffset? expiration)
         {
-            var pCacheStackEntity = new PersistenceCacheStackEntity(key, obj, Expiration);
+            var pCacheStackEntity = new PersistenceCacheStackEntity(key, obj, expiration);
             if (pCacheStackEntity != null)
             {
                 return this.SynchManager.UpdateItem(pCacheStackEntity);
