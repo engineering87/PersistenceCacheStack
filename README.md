@@ -4,12 +4,12 @@ PersistenceCacheStack uses the **MemoryCache** as the first layer and **Redis** 
 
 ### What can it be used for?
 PersistenceCacheStack can be used in all contexts that require fast access to the cache without sacrificing persistence.
-For example, a service that should not lose the cached data after a reboot or an update.
+Through this library you can avoid network time for access to the Redis cache.
 
 ### How it works
 PersistenceCacheStack uses two different cache layers, a first layer in-memory using MemoryCache and a second layer on Redis for persistence.
 All operations performed in cache will take place on the first in-memory cache layer and will be synchronized with the *fire-and-forget* pattern, with Redis. 
-This logic allows the data to be obtained immediately without waiting for any network latency. On the other hand, the system changes from a strong consistency to eventually consistency in a multi-node context.
+This logic allows the data to be obtained immediately without waiting for any network latency. On the other hand, the system changes from a *strong* consistency to *eventually* consistency in a multi-node context.
 In fact, a cached data may not be updated to the version of the other nodes but eventually it will be aligned.
 
 ### Architecture
@@ -89,7 +89,7 @@ https://github.com/imperugo/StackExchange.Redis.Extensions
 
 ### Contributing
 Thank you for considering to help out with the source code! We welcome contributions from anyone on the internet, and are grateful for even the smallest of fixes!
-If you'd like to contribute to go-ethereum, please fork, fix, commit and send a pull request for the maintainers to review and merge into the main code base.
+If you'd like to contribute, please fork, fix, commit and send a pull request for the maintainers to review and merge into the main code base.
 
 **Getting started with Git and GitHub**
 
