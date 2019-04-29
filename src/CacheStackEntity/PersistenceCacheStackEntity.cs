@@ -8,27 +8,27 @@ namespace CacheStackEntity
     [Serializable]
     public class PersistenceCacheStackEntity
     {
-        public string Key { get; private set; }
-        public object Object { get; set; }
-        public DateTimeOffset? Expiration { get; private set; }
+        public string Key { get; }
+        public object Object { get; }
+        public DateTimeOffset? Expiration { get; }
 
         /// <summary>
         /// Constructor with key expiration
         /// </summary>
-        /// <param name="Key"></param>
-        /// <param name="Object"></param>
-        /// <param name="Expiration"></param>
-        public PersistenceCacheStackEntity(string Key, object Object, DateTimeOffset? Expiration)
+        /// <param name="key"></param>
+        /// <param name="obj"></param>
+        /// <param name="expiration"></param>
+        public PersistenceCacheStackEntity(string key, object obj, DateTimeOffset? expiration)
         {
-            if(string.IsNullOrEmpty(Key) || Object == null)
+            if(string.IsNullOrEmpty(key) || obj == null)
                 throw new ArgumentException("Key or Object cannot be null");
 
-            Type type = Object.GetType();
+            var type = obj.GetType();
             if (true == type.IsSerializable)
             {
-                this.Key = Key;
-                this.Object = Object;
-                this.Expiration = Expiration;
+                this.Key = key;
+                this.Object = obj;
+                this.Expiration = expiration;
             }
             else
             {
@@ -39,18 +39,18 @@ namespace CacheStackEntity
         /// <summary>
         /// Constructor with no key expiration
         /// </summary>
-        /// <param name="Key"></param>
-        /// <param name="Object"></param>
-        public PersistenceCacheStackEntity(string Key, object Object)
+        /// <param name="key"></param>
+        /// <param name="obj"></param>
+        public PersistenceCacheStackEntity(string key, object obj)
         {
-            if (string.IsNullOrEmpty(Key) || Object == null)
+            if (string.IsNullOrEmpty(key) || obj == null)
                 throw new ArgumentException("Key or Object cannot be null");
 
-            Type type = Object.GetType();
+            var type = obj.GetType();
             if (true == type.IsSerializable)
             {
-                this.Key = Key;
-                this.Object = Object;
+                this.Key = key;
+                this.Object = obj;
                 this.Expiration = null;
             }
             else

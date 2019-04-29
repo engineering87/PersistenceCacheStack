@@ -14,30 +14,30 @@ namespace MemoryCacheLayer
 
         static readonly object padlock = new object();
 
-        public CachingProviderBase() { }
+        protected CachingProviderBase() { }
 
         /// <summary>
         /// Add the object into MemoryCache
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        protected virtual bool AddItem(PersistenceCacheStackEntity PersistenceCacheStackEntity)
+        /// <param name="persistenceCacheStackEntity"></param>
+        /// <returns></returns>
+        protected virtual bool AddItem(PersistenceCacheStackEntity persistenceCacheStackEntity)
         {
             try
             {
-                var CacheItem = new CacheItem(PersistenceCacheStackEntity.Key, PersistenceCacheStackEntity);
+                var cacheItem = new CacheItem(persistenceCacheStackEntity.Key, persistenceCacheStackEntity);
                 lock (padlock)
                 {
-                    if (PersistenceCacheStackEntity.Expiration == null)
+                    if (persistenceCacheStackEntity.Expiration == null)
                     {
-                        cache.Set(CacheItem, new CacheItemPolicy());
+                        cache.Set(cacheItem, new CacheItemPolicy());
                     }
                     else
                     {
                         // if it is required a cache expiration
-                        cache.Set(CacheItem, new CacheItemPolicy()
+                        cache.Set(cacheItem, new CacheItemPolicy()
                         {
-                            AbsoluteExpiration = PersistenceCacheStackEntity.Expiration.Value
+                            AbsoluteExpiration = persistenceCacheStackEntity.Expiration.Value
                         });
                     }
                 }
@@ -60,20 +60,19 @@ namespace MemoryCacheLayer
             {
                 lock (padlock)
                 {
-                    Parallel.ForEach(items, (PersistenceCacheStackEntity) =>
+                    Parallel.ForEach(items, (persistenceCacheStackEntity) =>
                     {
-                        //var CacheItem = new CacheItem(PersistenceCacheStackEntity.Key, PersistenceCacheStackEntity.Object);
-                        var CacheItem = new CacheItem(PersistenceCacheStackEntity.Key, PersistenceCacheStackEntity);
-                        if (PersistenceCacheStackEntity.Expiration == null)
+                        var cacheItem = new CacheItem(persistenceCacheStackEntity.Key, persistenceCacheStackEntity);
+                        if (persistenceCacheStackEntity.Expiration == null)
                         {
-                            cache.Set(CacheItem, new CacheItemPolicy());
+                            cache.Set(cacheItem, new CacheItemPolicy());
                         }
                         else
                         {
                             // if it is required a cache expiration
-                            cache.Set(CacheItem, new CacheItemPolicy()
+                            cache.Set(cacheItem, new CacheItemPolicy()
                             {
-                                AbsoluteExpiration = PersistenceCacheStackEntity.Expiration.Value
+                                AbsoluteExpiration = persistenceCacheStackEntity.Expiration.Value
                             });
                         }
                     });
@@ -178,15 +177,15 @@ namespace MemoryCacheLayer
         {
             try
             {
-                var CompleteList = new BlockingCollection<PersistenceCacheStackEntity>();
+                var completeList = new BlockingCollection<PersistenceCacheStackEntity>();
                 lock (padlock)
                 {
-                    Parallel.ForEach(cache.Select(kvp => kvp.Value).ToList(), (Item) =>
+                    Parallel.ForEach(cache.Select(kvp => kvp.Value).ToList(), (item) =>
                     {
-                        CompleteList.Add((PersistenceCacheStackEntity)Item);
+                        completeList.Add((PersistenceCacheStackEntity)item);
                     });
                 }
-                return CompleteList.ToList();
+                return completeList.ToList();
             }
             catch (Exception)
             {
@@ -225,15 +224,12 @@ namespace MemoryCacheLayer
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && cache != null)
             {
-                if (cache != null)
+                lock (padlock)
                 {
-                    lock (padlock)
-                    {
-                        cache.Dispose();
-                        cache = null;
-                    }
+                    cache.Dispose();
+                    cache = null;
                 }
             }
         }

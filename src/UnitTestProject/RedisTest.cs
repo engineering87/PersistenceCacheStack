@@ -10,7 +10,7 @@ namespace UnitTestProject
         [TestMethod]
         public void TestAddItem()
         {
-            PersistenceCacheStackEntity persistenceCacheStackEntity = new PersistenceCacheStackEntity("test", new object(), null);
+            var persistenceCacheStackEntity = new PersistenceCacheStackEntity("test", new object(), null);
             var addResult = new RedisWrapper().Push(persistenceCacheStackEntity);
             Assert.IsTrue(addResult);
         }
@@ -18,7 +18,7 @@ namespace UnitTestProject
         [TestMethod]
         public void TestGetItem()
         {
-            PersistenceCacheStackEntity persistenceCacheStackEntity = new PersistenceCacheStackEntity("test", new object(), null);
+            var persistenceCacheStackEntity = new PersistenceCacheStackEntity("test", new object(), null);
 
             var redisWrapper = new RedisWrapper();
 
@@ -32,7 +32,7 @@ namespace UnitTestProject
         [TestMethod]
         public void TestRemoveItem()
         {
-            PersistenceCacheStackEntity persistenceCacheStackEntity = new PersistenceCacheStackEntity("test", new object(), null);
+            var persistenceCacheStackEntity = new PersistenceCacheStackEntity("test", new object(), null);
 
             var redisWrapper = new RedisWrapper();
 

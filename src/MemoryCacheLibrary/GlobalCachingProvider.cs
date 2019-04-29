@@ -13,7 +13,7 @@ namespace MemoryCacheLayer
         /// <summary>
         /// Singleton GlobalCachingProvider
         /// </summary>
-        public static GlobalCachingProvider Instance
+        public static IGlobalCachingProvider Instance
         {
             get
             {
@@ -34,11 +34,11 @@ namespace MemoryCacheLayer
         /// <summary>
         /// Add the object into MemoryCache
         /// </summary>
-        /// <param name="PersistenceCacheStackEntity"></param>
+        /// <param name="persistenceCacheStackEntity"></param>
         /// <returns></returns>
-        public virtual new bool AddItem(PersistenceCacheStackEntity PersistenceCacheStackEntity)
+        public new bool AddItem(PersistenceCacheStackEntity persistenceCacheStackEntity)
         {
-            return base.AddItem(PersistenceCacheStackEntity);
+            return base.AddItem(persistenceCacheStackEntity);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace MemoryCacheLayer
         /// </summary>
         /// <param name="items"></param>
         /// <returns></returns>
-        public virtual new bool AddItems(List<PersistenceCacheStackEntity> items)
+        public new bool AddItems(List<PersistenceCacheStackEntity> items)
         {
             return base.AddItems(items);
         }
@@ -56,7 +56,7 @@ namespace MemoryCacheLayer
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public virtual new bool RemoveItem(string key)
+        public new bool RemoveItem(string key)
         {
             return base.RemoveItem(key);
         }
@@ -68,7 +68,7 @@ namespace MemoryCacheLayer
         /// <param name="key"></param>
         /// <param name="flagRemove"></param>
         /// <returns></returns>
-        public virtual new PersistenceCacheStackEntity GetItem(string key, bool flagRemove)
+        public new PersistenceCacheStackEntity GetItem(string key, bool flagRemove)
         {
             return base.GetItem(key, flagRemove);
         }
@@ -80,7 +80,7 @@ namespace MemoryCacheLayer
         /// <param name="keys"></param>
         /// <param name="flagRemove"></param>
         /// <returns></returns>
-        public virtual new List<PersistenceCacheStackEntity> GetItems(List<string> keys, bool flagRemove)
+        public new List<PersistenceCacheStackEntity> GetItems(List<string> keys, bool flagRemove)
         {
             return base.GetItems(keys, flagRemove);
         }
@@ -89,7 +89,7 @@ namespace MemoryCacheLayer
         /// Get all the items from MemoryCache
         /// </summary>
         /// <returns></returns>
-        public virtual new List<PersistenceCacheStackEntity> GetAllItem()
+        public new List<PersistenceCacheStackEntity> GetAllItem()
         {
             return base.GetAllItem();
         }
@@ -98,7 +98,7 @@ namespace MemoryCacheLayer
         /// Clear the current instance of MemoryCache
         /// </summary>
         /// <returns></returns>
-        public virtual new bool ClearCache()
+        public new bool ClearCache()
         {
             return base.ClearCache();
         }

@@ -5,15 +5,18 @@ namespace PersistenceCacheStack
 {
     public class PersistenceCacheStackClient<T>
     {
-        private readonly SynchManager SynchManager;
+        /// <summary>
+        /// The cache synchronization module
+        /// </summary>
+        private readonly SynchManager synchManager;
 
         /// <summary>
         /// PersistenceCacheStack constructor
         /// </summary>
         public PersistenceCacheStackClient()
         {
-            this.SynchManager = new SynchManager();
-            this.SynchManager.SynchFromRedis();
+            this.synchManager = new SynchManager();
+            this.synchManager.SynchFromRedis();
         }
 
         /// <summary>
@@ -23,10 +26,10 @@ namespace PersistenceCacheStack
         /// <param name="SynchFromRedis"></param>
         public PersistenceCacheStackClient(bool synchFromRedis)
         {
-            this.SynchManager = new SynchManager();
+            this.synchManager = new SynchManager();
             if (true == synchFromRedis)
             {
-                this.SynchManager.SynchFromRedis();
+                this.synchManager.SynchFromRedis();
             }
         }
 
@@ -37,7 +40,7 @@ namespace PersistenceCacheStack
         /// <returns></returns>
         public T GetItem(string key)
         {
-            var obj = this.SynchManager.GetItem(key);
+            var obj = this.synchManager.GetItem(key);
             if (obj != null && obj.Object is T)
             {
                 return (T)obj.Object;
@@ -57,7 +60,7 @@ namespace PersistenceCacheStack
             var pCacheStackEntity = new PersistenceCacheStackEntity(key, obj, expiration);
             if (pCacheStackEntity != null)
             {
-                return this.SynchManager.AddItem(pCacheStackEntity);
+                return this.synchManager.AddItem(pCacheStackEntity);
             }
             return false;
         }
@@ -69,7 +72,7 @@ namespace PersistenceCacheStack
         /// <returns></returns>
         public bool RemoveItem(string key)
         {
-            return this.SynchManager.RemoveItem(key);
+            return this.synchManager.RemoveItem(key);
         }
 
         /// <summary>
@@ -84,7 +87,7 @@ namespace PersistenceCacheStack
             var pCacheStackEntity = new PersistenceCacheStackEntity(key, obj, expiration);
             if (pCacheStackEntity != null)
             {
-                return this.SynchManager.UpdateItem(pCacheStackEntity);
+                return this.synchManager.UpdateItem(pCacheStackEntity);
             }
             return false;
         }
@@ -94,7 +97,7 @@ namespace PersistenceCacheStack
         /// </summary>
         public void SynchFromRedis()
         {
-            this.SynchManager.SynchFromRedis();
+            this.synchManager.SynchFromRedis();
         }
 
         /// <summary>
@@ -102,7 +105,7 @@ namespace PersistenceCacheStack
         /// </summary>
         public void Clear()
         {
-            this.SynchManager.ClearCache();
+            this.synchManager.ClearCache();
         }
     }
 }

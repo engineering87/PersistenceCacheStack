@@ -83,7 +83,7 @@ namespace RedisLayer
         /// <returns></returns>
         public bool Push(PersistenceCacheStackEntity pCacheStackEntity)
         {
-            if (pCacheStackEntity.Expiration.HasValue)
+            if (pCacheStackEntity?.Expiration != null)
             {
                 return RedisAccess.Instance.RedisCacheClient.Add(pCacheStackEntity.Key, pCacheStackEntity, pCacheStackEntity.Expiration.Value);
             }
@@ -99,7 +99,7 @@ namespace RedisLayer
         /// <returns></returns>
         public bool Update(PersistenceCacheStackEntity pCacheStackEntity)
         {
-            if (pCacheStackEntity.Expiration.HasValue)
+            if (pCacheStackEntity?.Expiration != null)
             {
                 return RedisAccess.Instance.RedisCacheClient.Replace(pCacheStackEntity.Key, pCacheStackEntity, pCacheStackEntity.Expiration.Value);
             }
@@ -133,12 +133,8 @@ namespace RedisLayer
         /// <returns></returns>
         public bool Clear()
         {
-            IEnumerable<string> keys = RedisAccess.Instance.RedisCacheClient.SearchKeys("*");
-            if (keys != null)
-            {
-                return this.Remove(keys.ToList());
-            }
-            return false;
+            var keys = RedisAccess.Instance.RedisCacheClient.SearchKeys("*");
+            return keys != null && this.Remove(keys.ToList());
         }
     }
 }

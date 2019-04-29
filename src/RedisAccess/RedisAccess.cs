@@ -9,7 +9,7 @@ namespace RedisLayer
         private static readonly object _synclock = new object();
         private static RedisAccess _instance;
         private readonly NewtonsoftSerializer _serializer;
-        public StackExchangeRedisCacheClient RedisCacheClient { get; private set; }
+        public StackExchangeRedisCacheClient RedisCacheClient { get; } // TODO use RedisCacheClient
 
         private RedisAccess()
         {

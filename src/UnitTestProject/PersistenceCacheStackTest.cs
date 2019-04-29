@@ -12,7 +12,7 @@ namespace UnitTestProject
         [TestMethod]
         public void TestAddItem()
         {
-            UnitTestClass testClass = new UnitTestClass()
+            var testClass = new UnitTestClass()
             {
                 TestDescription = "TestAddItem",
                 TestId = 1
@@ -27,7 +27,7 @@ namespace UnitTestProject
         [TestMethod]
         public void TestGetItem()
         {
-            UnitTestClass testClass = new UnitTestClass()
+            var testClass = new UnitTestClass()
             {
                 TestDescription = "TestAddItem",
                 TestId = 2
@@ -46,7 +46,7 @@ namespace UnitTestProject
         [TestMethod]
         public void TestRemoveItem()
         {
-            UnitTestClass testClass = new UnitTestClass()
+            var testClass = new UnitTestClass()
             {
                 TestDescription = "TestRemoveItem",
                 TestId = 3
@@ -69,14 +69,13 @@ namespace UnitTestProject
         [TestMethod]
         public void TestSynchFromRedis()
         {
-            // test class
-            UnitTestClass testClass = new UnitTestClass()
+            var testClass = new UnitTestClass()
             {
                 TestDescription = "TestSynchFromRedis",
                 TestId = 4
             };
 
-            PersistenceCacheStackEntity persistenceCacheStackEntity = new PersistenceCacheStackEntity("TestSynchFromRedis", testClass, null);
+            var persistenceCacheStackEntity = new PersistenceCacheStackEntity("TestSynchFromRedis", testClass, null);
 
             var redisWrapper = new RedisWrapper();
 
