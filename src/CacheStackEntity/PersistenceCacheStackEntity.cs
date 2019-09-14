@@ -94,12 +94,10 @@ namespace CacheStackEntity
                     $"{nameof(Object)}={Object.GetType().Name} " +
                     $"{nameof(Expiration)}={Expiration.Value}";
             }
-            else
-            {
-                return 
-                    $"{nameof(Key)}={Key} " +
-                    $"{nameof(Object)}={Object.GetType().Name}";
-            }
+
+            return 
+                $"{nameof(Key)}={Key} " +
+                $"{nameof(Object)}={Object.GetType().Name}";
         }
     }
 }

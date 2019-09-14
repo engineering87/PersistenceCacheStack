@@ -25,7 +25,7 @@ namespace RedisLayer
             }
             catch (Exception)
             {
-                return default(PersistenceCacheStackEntity);
+                return null;
             }
         }
 
@@ -43,7 +43,7 @@ namespace RedisLayer
             }
             catch (Exception)
             {
-                return default(List<PersistenceCacheStackEntity>);
+                return null;
             }
         }
 
@@ -72,38 +72,32 @@ namespace RedisLayer
             }
             catch (Exception)
             {
-                return default(List<PersistenceCacheStackEntity>);
+                return null;
             }
         }
 
         /// <summary>
         /// Insert the PersistenceCacheStackEntity object into Redis
         /// </summary>
-        /// <param name="PersistenceCacheStackEntity"></param>
+        /// <param name="pCacheStackEntity"></param>
         /// <returns></returns>
         public bool Push(PersistenceCacheStackEntity pCacheStackEntity)
         {
-            if (pCacheStackEntity?.Expiration != null)
-            {
-                return RedisAccess.Instance.RedisCacheClient.Add(pCacheStackEntity.Key, pCacheStackEntity, pCacheStackEntity.Expiration.Value);
-            }
-            return RedisAccess.Instance.RedisCacheClient.Add(pCacheStackEntity.Key, pCacheStackEntity);
+            return pCacheStackEntity != null && (pCacheStackEntity.Expiration != null 
+                       ? RedisAccess.Instance.RedisCacheClient.Add(pCacheStackEntity.Key, pCacheStackEntity, pCacheStackEntity.Expiration.Value) 
+                       : RedisAccess.Instance.RedisCacheClient.Add(pCacheStackEntity.Key, pCacheStackEntity));
         }
 
         /// <summary>
         /// Update the PersistenceCacheStackEntity object
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="expiresAt"></param>
-        /// <param name="value"></param>
+        /// <param name="pCacheStackEntity"></param>
         /// <returns></returns>
         public bool Update(PersistenceCacheStackEntity pCacheStackEntity)
         {
-            if (pCacheStackEntity?.Expiration != null)
-            {
-                return RedisAccess.Instance.RedisCacheClient.Replace(pCacheStackEntity.Key, pCacheStackEntity, pCacheStackEntity.Expiration.Value);
-            }
-            return RedisAccess.Instance.RedisCacheClient.Replace(pCacheStackEntity.Key, pCacheStackEntity);
+            return pCacheStackEntity != null && (pCacheStackEntity?.Expiration != null 
+                       ? RedisAccess.Instance.RedisCacheClient.Replace(pCacheStackEntity.Key, pCacheStackEntity, pCacheStackEntity.Expiration.Value) 
+                       : RedisAccess.Instance.RedisCacheClient.Replace(pCacheStackEntity.Key, pCacheStackEntity));
         }
 
         /// <summary>

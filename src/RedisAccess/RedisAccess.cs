@@ -14,8 +14,8 @@ namespace RedisLayer
         private RedisAccess()
         {
             _serializer = new NewtonsoftSerializer();
-            var RedisConfiguration = RedisCachingSectionHandler.GetConfig();
-            RedisCacheClient = new StackExchangeRedisCacheClient(_serializer, RedisConfiguration);
+            var redisConfiguration = RedisCachingSectionHandler.GetConfig();
+            RedisCacheClient = new StackExchangeRedisCacheClient(_serializer, redisConfiguration);
         }
 
         /// <summary>

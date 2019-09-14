@@ -125,7 +125,7 @@ namespace MemoryCacheLayer
                     var res = cache[key];
                     if (res != null)
                     {
-                        if (remove == true)
+                        if (remove)
                             cache.Remove(key);
                     }
                     return (PersistenceCacheStackEntity)res;
@@ -156,7 +156,7 @@ namespace MemoryCacheLayer
                         if (res != null)
                         {
                             items.Add((PersistenceCacheStackEntity)res);
-                            if (remove == true)
+                            if (remove)
                                 cache.Remove(key);
                         }
                     });
