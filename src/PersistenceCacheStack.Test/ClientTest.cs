@@ -1,13 +1,29 @@
-﻿using CacheStackEntity;
-using PersistenceCacheStack;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RedisLayer;
-using UnitTestProject.TestObject;
+/*
+    This file is part of PersistenceCacheStack.
 
-namespace UnitTestProject
+    PersistenceCacheStack is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    PersistenceCacheStack is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with PersistenceCacheStack.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PersistenceCacheStack.Entities;
+using PersistenceCacheStack.RedisCache;
+using PersistenceCacheStack.Test.TestObject;
+
+namespace PersistenceCacheStack.Test
 {
     [TestClass]
-    public class PersistenceCacheStackTest
+    public class ClientTest
     {
         [TestMethod]
         public void TestAddItem()
@@ -18,9 +34,9 @@ namespace UnitTestProject
                 TestId = 1
             };
 
-            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>(true);
+            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>(false);
 
-            var addResult = persistenceCacheStack.AddItem("TestAddItem", testClass, null);
+            var addResult = persistenceCacheStack.AddItem("TestAddItem", testClass);
             Assert.IsTrue(addResult);
         }
 
@@ -33,9 +49,9 @@ namespace UnitTestProject
                 TestId = 2
             };
 
-            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>(true);
+            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>(false);
 
-            var addResult = persistenceCacheStack.AddItem("TestAddItem", testClass, null);
+            var addResult = persistenceCacheStack.AddItem("TestAddItem", testClass);
             Assert.IsTrue(addResult);
 
             var objectCached = persistenceCacheStack.GetItem("TestAddItem");
@@ -52,9 +68,9 @@ namespace UnitTestProject
                 TestId = 3
             };
 
-            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>(true);
+            var persistenceCacheStack = new PersistenceCacheStackClient<UnitTestClass>(false);
 
-            var addResult = persistenceCacheStack.AddItem("TestRemoveItem", testClass, null);
+            var addResult = persistenceCacheStack.AddItem("TestRemoveItem", testClass);
             Assert.IsTrue(addResult);
 
             var removeResult = persistenceCacheStack.RemoveItem("TestRemoveItem");
@@ -75,12 +91,12 @@ namespace UnitTestProject
                 TestId = 4
             };
 
-            var persistenceCacheStackEntity = new PersistenceCacheStackEntity("TestSynchFromRedis", testClass, null);
+            var persistenceCacheStackEntity = new StackEntity("TestSynchFromRedis", testClass);
 
             var redisWrapper = new RedisWrapper();
 
             // add fake object into Redis
-            var addResult = redisWrapper.Push(persistenceCacheStackEntity);
+            var addResult = redisWrapper.Insert(persistenceCacheStackEntity);
             Assert.IsTrue(addResult);
 
             var objectCached = redisWrapper.Get(persistenceCacheStackEntity.Key);

@@ -1,5 +1,23 @@
-﻿using CacheStackEntity;
+﻿/*
+    This file is part of PersistenceCacheStack.
+
+    PersistenceCacheStack is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    PersistenceCacheStack is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with PersistenceCacheStack.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 using System;
+using PersistenceCacheStack.Entities;
+using PersistenceCacheStack.Manager;
 
 namespace PersistenceCacheStack
 {
@@ -8,15 +26,15 @@ namespace PersistenceCacheStack
         /// <summary>
         /// The cache synchronization module
         /// </summary>
-        private readonly SynchManager synchManager;
+        private readonly SynchManager _synchManager;
 
         /// <summary>
         /// PersistenceCacheStack constructor
         /// </summary>
         public PersistenceCacheStackClient()
         {
-            this.synchManager = new SynchManager();
-            this.synchManager.SynchFromRedis();
+            _synchManager = new SynchManager();
+            _synchManager.SynchFromRedis();
         }
 
         /// <summary>
@@ -26,26 +44,51 @@ namespace PersistenceCacheStack
         /// <param name="synchFromRedis"></param>
         public PersistenceCacheStackClient(bool synchFromRedis)
         {
-            this.synchManager = new SynchManager();
+            _synchManager = new SynchManager();
             if (synchFromRedis)
             {
-                this.synchManager.SynchFromRedis();
+                _synchManager.SynchFromRedis();
             }
         }
 
         /// <summary>
-        /// Get the object from MemoryCache using generics
+        /// Get the key from the CacheStack
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public T GetItem(string key)
         {
-            var obj = this.synchManager.GetItem(key);
-            if (obj?.Object is T objObject)
+            var obj = _synchManager.GetItem(key);
+            if (obj?.Payload is T objObject)
             {
                 return objObject;
             }
             return default;
+        }
+
+        /// <summary>
+        /// Get and remove the key from the CacheStack
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public T GetRemoveItem(string key)
+        {
+            var obj = _synchManager.GetRemoveItem(key);
+            if (obj?.Payload is T objObject)
+            {
+                return objObject;
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Check if the key exist
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool ExistItem(string key)
+        {
+            return _synchManager.ExistItem(key);
         }
 
         /// <summary>
@@ -55,20 +98,32 @@ namespace PersistenceCacheStack
         /// <param name="obj"></param>
         /// <param name="expiration"></param>
         /// <returns></returns>
-        public bool AddItem(string key, T obj, DateTimeOffset? expiration)
+        public bool AddItem(string key, T obj, TimeSpan expiration)
         {
-            var pCacheStackEntity = new PersistenceCacheStackEntity(key, obj, expiration);
-            return this.synchManager.AddItem(pCacheStackEntity);
+            var pCacheStackEntity = new StackEntity(key, obj, expiration);
+            return _synchManager.AddItem(pCacheStackEntity);
         }
 
         /// <summary>
-        /// Remove the object with Key = key from MemoryCache and from Redis
+        /// Insert the object into MemoryCache and synch with Redis for persistence with no expiration
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public bool AddItem(string key, T obj)
+        {
+            var pCacheStackEntity = new StackEntity(key, obj, null);
+            return _synchManager.AddItem(pCacheStackEntity);
+        }
+
+        /// <summary>
+        /// Remove the key from MemoryCache and from Redis
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public bool RemoveItem(string key)
         {
-            return this.synchManager.RemoveItem(key);
+            return _synchManager.RemoveItem(key);
         }
 
         /// <summary>
@@ -78,10 +133,10 @@ namespace PersistenceCacheStack
         /// <param name="obj"></param>
         /// <param name="expiration"></param>
         /// <returns></returns>
-        public bool UpdateItem(string key, T obj, DateTimeOffset? expiration)
+        public bool UpdateItem(string key, T obj, TimeSpan? expiration)
         {
-            var pCacheStackEntity = new PersistenceCacheStackEntity(key, obj, expiration);
-            return this.synchManager.UpdateItem(pCacheStackEntity);
+            var pCacheStackEntity = new StackEntity(key, obj, expiration);
+            return _synchManager.UpdateItem(pCacheStackEntity);
         }
 
         /// <summary>
@@ -89,7 +144,7 @@ namespace PersistenceCacheStack
         /// </summary>
         public void SynchFromRedis()
         {
-            this.synchManager.SynchFromRedis();
+            _synchManager.SynchFromRedis();
         }
 
         /// <summary>
@@ -97,7 +152,7 @@ namespace PersistenceCacheStack
         /// </summary>
         public void Clear()
         {
-            this.synchManager.ClearCache();
+            _synchManager.ClearCache();
         }
     }
 }

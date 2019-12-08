@@ -1,17 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2011
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryCacheLayer", "MemoryCacheLibrary\MemoryCacheLayer.csproj", "{E2F9F0F0-299E-4A84-88A8-F845B4E3D423}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersistenceCacheStack", "PersistenceCacheStack\PersistenceCacheStack.csproj", "{FEFC5C9B-16D2-48F8-89A3-BAD6A431478F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{476625F0-B772-445A-B487-41C1CCFE46C7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisLayer", "RedisAccess\RedisLayer.csproj", "{61FDFD16-5222-480F-800E-488DEC95CAE0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistenceCacheStack", "PersistenceCacheStack\PersistenceCacheStack.csproj", "{EF41866F-DFAB-42F1-8520-B22BC6931D40}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistenceCacheStackEntity", "CacheStackEntity\PersistenceCacheStackEntity.csproj", "{3CCED52B-C37B-4E97-B701-AADA1A1BBC36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistenceCacheStack.Test", "PersistenceCacheStack.Test\PersistenceCacheStack.Test.csproj", "{DBEC9B0C-2A29-4733-BDFC-CC8B032556E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,31 +13,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E2F9F0F0-299E-4A84-88A8-F845B4E3D423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2F9F0F0-299E-4A84-88A8-F845B4E3D423}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2F9F0F0-299E-4A84-88A8-F845B4E3D423}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2F9F0F0-299E-4A84-88A8-F845B4E3D423}.Release|Any CPU.Build.0 = Release|Any CPU
-		{476625F0-B772-445A-B487-41C1CCFE46C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{476625F0-B772-445A-B487-41C1CCFE46C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{476625F0-B772-445A-B487-41C1CCFE46C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{476625F0-B772-445A-B487-41C1CCFE46C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61FDFD16-5222-480F-800E-488DEC95CAE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61FDFD16-5222-480F-800E-488DEC95CAE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61FDFD16-5222-480F-800E-488DEC95CAE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61FDFD16-5222-480F-800E-488DEC95CAE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF41866F-DFAB-42F1-8520-B22BC6931D40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF41866F-DFAB-42F1-8520-B22BC6931D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF41866F-DFAB-42F1-8520-B22BC6931D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF41866F-DFAB-42F1-8520-B22BC6931D40}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3CCED52B-C37B-4E97-B701-AADA1A1BBC36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3CCED52B-C37B-4E97-B701-AADA1A1BBC36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3CCED52B-C37B-4E97-B701-AADA1A1BBC36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3CCED52B-C37B-4E97-B701-AADA1A1BBC36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEFC5C9B-16D2-48F8-89A3-BAD6A431478F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEFC5C9B-16D2-48F8-89A3-BAD6A431478F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEFC5C9B-16D2-48F8-89A3-BAD6A431478F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEFC5C9B-16D2-48F8-89A3-BAD6A431478F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBEC9B0C-2A29-4733-BDFC-CC8B032556E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBEC9B0C-2A29-4733-BDFC-CC8B032556E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBEC9B0C-2A29-4733-BDFC-CC8B032556E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBEC9B0C-2A29-4733-BDFC-CC8B032556E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A372EE5B-3C5C-4888-A64F-C5B67EAF543A}
+		SolutionGuid = {057415B5-1F4A-446E-BF5F-4B2E2613BD79}
 	EndGlobalSection
 EndGlobal

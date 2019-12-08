@@ -1,33 +1,52 @@
-﻿using MemoryCacheLayer;
-using RedisLayer;
-using System.Threading.Tasks;
-using CacheStackEntity;
+﻿/*
+    This file is part of PersistenceCacheStack.
 
-namespace PersistenceCacheStack
+    PersistenceCacheStack is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    PersistenceCacheStack is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with PersistenceCacheStack.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+using PersistenceCacheStack.Entities;
+using PersistenceCacheStack.MemoryCache;
+using PersistenceCacheStack.RedisCache;
+using System.Threading.Tasks;
+
+namespace PersistenceCacheStack.Manager
 {
     /// <summary>
     /// This class deals with all the synch activity through in-memory and Redis layers
     /// </summary>
     public class SynchManager
     {
-        private readonly TaskFactory taskFactory;
-        private readonly RedisWrapper redisWrapper;
+        private readonly TaskFactory _taskFactory;
+        private readonly RedisWrapper _redisWrapper;
+        private readonly MemoryWrapper _memoryWrapper;
 
         public SynchManager()
         {
-            this.taskFactory = new TaskFactory(TaskCreationOptions.PreferFairness, TaskContinuationOptions.PreferFairness);
-            this.redisWrapper = new RedisWrapper();
+            _taskFactory = new TaskFactory(TaskCreationOptions.PreferFairness, TaskContinuationOptions.PreferFairness);
+            _redisWrapper = new RedisWrapper();
+            _memoryWrapper = new MemoryWrapper();
         }
 
         /// <summary>
         /// Synch all cached object from Redis to in-memory MemoryCache
-        /// </summary>ò
+        /// </summary>
         public void SynchFromRedis()
         {
-            var objRedis = this.redisWrapper.GetAll();
-            if (objRedis!= null && objRedis.Count > 0)
+            var objRedis = _redisWrapper.GetAll();
+            if (objRedis != null && objRedis.Count > 0)
             {
-                this.taskFactory.StartNew(() => GlobalCachingProvider.Instance.AddItems(objRedis));
+                _taskFactory.StartNew(() => _memoryWrapper.Insert(objRedis));
             }
         }
 
@@ -36,28 +55,54 @@ namespace PersistenceCacheStack
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public PersistenceCacheStackEntity GetItem(string key)
+        public StackEntity GetItem(string key)
         {
-            var objCached = GlobalCachingProvider.Instance.GetItem(key, false);
+            var objCached = _memoryWrapper.Get(key);
             if (objCached != null)
             {
                 // fire and forget, check the status of the current key-object on Redis for any changes from other nodes
-                this.taskFactory.StartNew(() => this.CheckExternalsUpdates(key, objCached));
+                _taskFactory.StartNew(() => CheckExternalsUpdates(key, objCached));
             }
             return objCached;
         }
 
         /// <summary>
+        /// Get and remove the item from MemoryCache and Redis
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public StackEntity GetRemoveItem(string key)
+        {
+            var objCached = _memoryWrapper.Get(key);
+            if (objCached != null)
+            {
+                _memoryWrapper.Remove(key);
+                _taskFactory.StartNew(() => _redisWrapper.Remove(key));
+            }
+            return objCached;
+        }
+
+        /// <summary>
+        /// Check if the key exist
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool ExistItem(string key)
+        {
+            return GetItem(key) != null;
+        }
+
+        /// <summary>
         /// Add item into MemoryCache and Redis for persistence
         /// </summary>
-        /// <param name="PersistenceCacheStackEntity"></param>
+        /// <param name="stackEntity"></param>
         /// <returns></returns>
-        public bool AddItem(PersistenceCacheStackEntity persistenceCacheStackEntity)
+        public bool AddItem(StackEntity stackEntity)
         {
-            var resultInMemory = GlobalCachingProvider.Instance.AddItem(persistenceCacheStackEntity);
-            if(true == resultInMemory)
+            var resultInMemory = _memoryWrapper.Insert(stackEntity);
+            if (resultInMemory)
             {
-                this.taskFactory.StartNew(() => this.redisWrapper.Push(persistenceCacheStackEntity));
+                _taskFactory.StartNew(() => _redisWrapper.Insert(stackEntity));
                 return true;
             }
             return false;
@@ -70,33 +115,24 @@ namespace PersistenceCacheStack
         /// <returns></returns>
         public bool RemoveItem(string key)
         {
-            var resultInMemory = GlobalCachingProvider.Instance.RemoveItem(key);
-            if (true == resultInMemory)
-            {
-                this.taskFactory.StartNew(() => this.redisWrapper.Remove(key));
-                return true;
-            }
-            return false;
+            _memoryWrapper.Remove(key);
+            _taskFactory.StartNew(() => _redisWrapper.Remove(key));
+            return true;
         }
 
         /// <summary>
-        /// Update the PersistenceCacheStackEntity object into MemoryCache and Redis
+        /// Update the StackEntity object into MemoryCache and Redis
         /// </summary>
-        /// <param name="PersistenceCacheStackEntity"></param>
+        /// <param name="stackEntity"></param>
         /// <returns></returns>
-        public bool UpdateItem(PersistenceCacheStackEntity persistenceCacheStackEntity)
+        public bool UpdateItem(StackEntity stackEntity)
         {
-            var objCached = GlobalCachingProvider.Instance.GetItem(persistenceCacheStackEntity.Key, true);
-            if (objCached != null)
+            var resultInMemory = _memoryWrapper.Update(stackEntity);
+            if (resultInMemory)
             {
-                var resultInMemory = GlobalCachingProvider.Instance.AddItem(persistenceCacheStackEntity);
-                if (true == resultInMemory)
-                {
-                    this.taskFactory.StartNew(() => this.redisWrapper.Update(persistenceCacheStackEntity));
-                }
-                return resultInMemory;
+                _taskFactory.StartNew(() => _redisWrapper.Update(stackEntity));
             }
-            return false;
+            return resultInMemory;
         }
 
         /// <summary>
@@ -104,37 +140,33 @@ namespace PersistenceCacheStack
         /// </summary>
         public void ClearCache()
         {
-            var clearResult = GlobalCachingProvider.Instance.ClearCache();
-            if(true == clearResult)
-            {
-                this.taskFactory.StartNew(() => this.redisWrapper.Clear());
-            }
+            _memoryWrapper.Clear();
+            _taskFactory.StartNew(() => _redisWrapper.Clear());
         }
 
         /// <summary>
         /// Check the current state of the object into Redis and eventually sync the memory cache
         /// </summary>
-        private void CheckExternalsUpdates(string key, PersistenceCacheStackEntity persistenceCacheStackEntity)
+        private void CheckExternalsUpdates(string key, StackEntity stackEntity)
         {
-            var objRedis = redisWrapper.Get(key);
-            if(objRedis != null)
+            var objRedis = _redisWrapper.Get(key);
+            if (objRedis != null)
             {
-                if(persistenceCacheStackEntity == null)
+                if (stackEntity == null)
                 {
                     // another node has added the object with key into redis, we must therefore add it into the MemoryCache
-                    GlobalCachingProvider.Instance.AddItem(objRedis);
+                    _memoryWrapper.Insert(objRedis);
                 }
-                else if(!objRedis.Equals(persistenceCacheStackEntity))
+                else if (!objRedis.Equals(stackEntity.Payload) || objRedis.Expiration != stackEntity.Expiration)
                 {
-                    // another node has updated the object, we must therefore update it into the MemoryCache
-                    GlobalCachingProvider.Instance.GetItem(key, true);
-                    GlobalCachingProvider.Instance.AddItem(objRedis);
+                    // another node has updated the object (payload or expiration), we must therefore update it into the MemoryCache
+                    _memoryWrapper.Update(stackEntity);
                 }
             }
             else
             {
-                // another node has deleted the key from Redis, we must therefore remove it from the MemoryCache
-                GlobalCachingProvider.Instance.GetItem(key, true);
+                // another node has deleted the key from Redis, we must therefore remove it from the in-memory layer
+                _memoryWrapper.Remove(key);
             }
         }
     }
