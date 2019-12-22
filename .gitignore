@@ -20,3 +20,7 @@ src/TestResults/
 src/UnitTestProject/bin/
 src/UnitTestProject/debug/
 src/UnitTestProject/obj/
+.DS_Store
+src/.DS_Store
+src/PersistenceCacheStack.Test/.DS_Store
+src/PersistenceCacheStack/.DS_Store
